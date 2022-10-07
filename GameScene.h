@@ -25,7 +25,8 @@ private: // 静的メンバ変数
 	static const int debugTextTexNumber = 0;
 
 public: // メンバ関数
-
+	Sprite* sprite1 = nullptr;
+	Sprite* sprite2 = nullptr;
 	/// <summary>
 	/// コンストクラタ
 	/// </summary>
@@ -54,7 +55,7 @@ public: // メンバ関数
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
 	Input* input = nullptr;
-	DebugText debugText;	
+	DebugText debugText;
 
 	/// <summary>
 	/// ゲームシーン用
@@ -62,4 +63,3 @@ private: // メンバ変数
 	Sprite* spriteBG = nullptr;
 	Object3d* object3d = nullptr;
 };
-
