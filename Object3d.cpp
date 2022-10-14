@@ -408,7 +408,7 @@ void Object3d::CreateModel()
 	//ファイルストリーム
 	std::ifstream file;
 	//.objファイルを開く
-	file.open("Resources/triangle/triangle.obj");
+	file.open("Resources/triangle/triangle_txt.obj");
 	//ファイルオープン失敗をチェック
 	if (file.fail())
 	{
@@ -438,13 +438,42 @@ void Object3d::CreateModel()
 			line_stream >> position.x;
 			line_stream >> position.y;
 			line_stream >> position.z;
-			//座標データに追加
+			
+			//テクスチャ座標データに追加
 			positions.emplace_back(position);
 			//頂点データに追加
-			VertexPosNormalUv vertex{};
-			vertex.pos = position;
-			vertices.emplace_back(vertex);
+		//	VertexPosNormalUv vertex{};
+		//	vertex.pos = position;
+		//	vertices.emplace_back(vertex);
 		}
+
+		//先頭の文字列がｖtなら頂点座標
+		if (key == "vt")
+		{
+			//U.V成分読み込み
+			XMFLOAT2 texcoord{};
+			line_stream >> texcoord.x;
+			line_stream >> texcoord.y;
+			//V方向反転
+			texcoord.y = 1.0f - texcoord.y;
+			//テクスチャ座標データに追加
+			texcoords.emplace_back(texcoord);
+		}
+
+
+		//先頭の文字列がｖnなら頂点座標
+		if (key == "vn")
+		{
+			//X,Y,Z成分読み込み
+			XMFLOAT3 normal{};
+			line_stream >> normal.x;
+			line_stream >> normal.y;
+			line_stream >> normal.z;
+			//法線ベクトルデータに追加
+			normals.emplace_back(normal);
+		}
+
+
 
 		//先頭の文字列がｆならポリゴン
 		if (key == "f")
@@ -455,10 +484,24 @@ void Object3d::CreateModel()
 			{
 
 				std::istringstream index_stream(index_string);
-				unsigned short indexPosition;
+				unsigned short indexPosition, indexNormal, indexTexcoord;
 				index_stream >> indexPosition;
+				index_stream.seekg(1, ios_base::cur); //スラッシュを飛ばす
+				index_stream >> indexTexcoord;
+				index_stream.seekg(1, ios_base::cur); //スラッシュを飛ばす
+				index_stream >> indexNormal;
 				//頂点インデックスに追加
-				indices.emplace_back(indexPosition - 1);
+				//indices.emplace_back(indexPosition - 1);
+
+				//頂点データの追加
+				VertexPosNormalUv vertex{};
+				vertex.pos = positions[indexPosition - 1];
+				vertex.normal = normals[indexNormal - 1];
+				vertex.uv = texcoords[indexTexcoord - 1];
+				vertices.emplace_back(vertex);
+				//インデックスデータの追加
+				indices.emplace_back((unsigned short)indices.size());
+
 			}
 		}
 	}
