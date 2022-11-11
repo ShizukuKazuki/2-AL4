@@ -56,6 +56,14 @@
     <FxCompile Include="Resources\shaders\SpriteVertexShader.hlsl">
       <Filter>シェーダー ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="OVJPixelShader.hlsl">
+      <Filter>シェーダー ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="OVJVertexShader.hlsl">
+      <Filter>シェーダー ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="OBJVertexShader.hlsl" />
+    <FxCompile Include="OBJPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\BasicShaderHeader.hlsli">
@@ -64,6 +72,16 @@
     <None Include="Resources\shaders\SpriteShaderHeader.hlsli">
       <Filter>シェーダー ファイル</Filter>
     </None>
+    <None Include="Header.hlsli">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="Header1.hlsli">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="OVJShaderHeader.hlsli">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="OBJShaderHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sprite.h">

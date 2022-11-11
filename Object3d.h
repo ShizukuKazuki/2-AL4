@@ -36,6 +36,25 @@ public: // サブクラス
 		XMMATRIX mat;	// ３Ｄ変換行列
 	};
 
+	//マテリアル
+	struct Material
+	{
+		std::string name; //マテリアル名
+		XMFLOAT3 ambient; //アンビエント影響度
+		XMFLOAT3 diffuse;  //ディフーズ影響度
+		XMFLOAT3 specular; //スペキュラー影響度
+		float alpha; //アルファ
+		std::string textureFilename; //テスクチャファイル名
+		//コンストラクタ
+		Material()
+		{
+			ambient = { 0.3f,0.3f,0.3f };
+			diffuse = { 0.0f,0.0f,0.0f };
+			specular = { 0.0f,0.0f,0.0f };
+			alpha = 1.0f;
+		}
+	};
+
 private: // 定数
 	static const int division = 50;					// 分割数
 	static const float radius;				// 底面の半径
@@ -136,18 +155,28 @@ private: // 静的メンバ変数
 	static D3D12_VERTEX_BUFFER_VIEW vbView;
 	// インデックスバッファビュー
 	static D3D12_INDEX_BUFFER_VIEW ibView;
+
 	// 頂点データ配列
 	//static VertexPosNormalUv vertices[vertexCount];
 	static std::vector<VertexPosNormalUv> vertices;
+	// std:: vector 強化版配列 
+	// 配列は最初に決めた大きさで固定(int a[4]、静的メモリ確保
+	// vectorは後からどんどん要素を追加できる(動的メモリ確保
+	
 	// 頂点インデックス配列
 	//static unsigned short indices[planeCount * 3];
 	static std::vector<unsigned short> indices;
+	//マテリアル
+	static Material material;
 
 private:// 静的メンバ関数
 	/// <summary>
 	/// デスクリプタヒープの初期化
 	/// </summary>
 	static void InitializeDescriptorHeap();
+
+	static bool LoadTexture(const std::string& directoryPath, const
+		std::string& filename);
 
 	/// <summary>
 	/// カメラ初期化
@@ -165,7 +194,7 @@ private:// 静的メンバ関数
 	/// <summary>
 	/// テクスチャ読み込み
 	/// </summary>
-	static void LoadTexture();
+	//static void LoadTexture();
 
 	/// <summary>
 	/// モデル作成
@@ -176,6 +205,11 @@ private:// 静的メンバ関数
 	/// ビュー行列を更新
 	/// </summary>
 	static void UpdateViewMatrix();
+
+/// <summary>
+/// マテリアル読み込み
+/// </summary>
+	static void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 
 public: // メンバ関数
 	bool Initialize();
@@ -202,7 +236,10 @@ public: // メンバ関数
 	void SetPosition(const XMFLOAT3& position) { this->position = position; }
 
 private: // メンバ変数
-	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
+	//ComPtr<ID3D12Resource> constBuff; // 定数バッファ
+	ComPtr<ID3D12Resource> constBuffB0;
+	ComPtr<ID3D12Resource> constBuffB1;
+
 	// 色
 	XMFLOAT4 color = { 1,1,1,1 };
 	// ローカルスケール
@@ -215,5 +252,26 @@ private: // メンバ変数
 	XMMATRIX matWorld;
 	// 親オブジェクト
 	Object3d* parent = nullptr;
+
+	//定数バッファ用データ
+	struct CohstBufferDateB0
+	{
+		//XMFLOAT4 color; //色（RGBA)
+		XMMATRIX mat;		//3D変換行列
+	};
+
+	//定数バッファようデータ構造体B1
+	struct ConstBufferDataB1
+	{
+		XMFLOAT3 ambient;
+		float pad1; //パンディング
+		XMFLOAT3 diffuse;
+		float pad2; 
+		XMFLOAT3 specular;
+		float alpha;
+	};
+	
+	
+	
 };
 
